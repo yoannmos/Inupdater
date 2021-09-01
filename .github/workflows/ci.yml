@@ -1,0 +1,55 @@
+name: CI
+
+on: 
+  push:
+    branches:
+      - master
+    pull_request:
+
+jobs:
+  ci:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    
+    - name: Install Poetry
+      run: pip install poetry=="1.1.6"
+    
+    - name: Config poetry
+      run: poetry config virtualenvs.in-project true    
+    
+    - name: Install Dependencies
+      run: poetry install
+
+    - name: Code Style
+      run: |
+        poetry run black . --check
+        poetry run pylint ./appexemple
+        poetry run isort . --check
+    - name: Test & Coverage
+      run: |
+        poetry run coverage run -m pytest
+        poetry run coverage xml
+    - name: "Upload coverage to Codecov"
+      uses: codecov/codecov-action@v1
+      with:
+        fail_ci_if_error: true
+      
+    - name: Docs
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        poetry run mkdocs gh-deploy --force
+
+    - name: Build Exe
+      run: poetry run pyinstaller --clean --onefile --name launcher --paths .venv/Lib/site-packages --paths .venv/Scripts inupdater/__main__.py
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: launcher
+        path: dist/

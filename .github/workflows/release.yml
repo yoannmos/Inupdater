@@ -1,0 +1,35 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+    
+      - name: Install Poetry
+        run: pip install poetry=="1.1.6"
+      
+      - name: Config poetry
+        run: poetry config virtualenvs.in-project true    
+    
+      - name: Install Dependencies
+        run: poetry install
+
+      - name: Build
+        run: poetry run pyinstaller --clean --onefile --name launcher --paths .venv/Lib/site-packages --paths .venv/Scripts inupdater/__main__.py
+      
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist\launcher.exe

@@ -1,0 +1,16 @@
+site_name: Inupdater
+
+nav:
+  - "index.md"
+  - "CHANGELOG.md"
+
+theme:
+  name: 'material'
+  palette:
+      primary: 'Teal'
+      accent: 'Deep Orange'
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      type: datetime
