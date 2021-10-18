@@ -1,12 +1,13 @@
 import pytest
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
 
 from inupdater.splash import SplashScreen
 
 
 @pytest.fixture
 def app(qtbot):
-    splashscreen = SplashScreen()
+    qpix = QPixmap("inupdater\data\splash.png")
+    splashscreen = SplashScreen(qpix)
     qtbot.addWidget(splashscreen)
     return splashscreen
 
