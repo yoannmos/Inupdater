@@ -46,7 +46,7 @@ jobs:
         poetry run mkdocs gh-deploy --force
 
     - name: Build Exe
-      run: poetry run pyinstaller --clean --onefile --name launcher --paths .venv/Lib/site-packages --paths .venv/Scripts inupdater/__main__.py
+      run: poetry run pyinstaller --clean --onefile --noconsole --name launcher --paths .venv/Lib/site-packages --exclude-module _bootlocale --add-data 'inupdater/data/splash.png;inupdater/data/splash.png' --paths .venv/Scripts inupdater/__main__.py
 
     - uses: actions/upload-artifact@v2
       with:
