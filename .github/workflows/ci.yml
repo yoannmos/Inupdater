@@ -18,7 +18,7 @@ jobs:
         python-version: "3.10"
     
     - name: Install Poetry
-      run: pip install poetry=="1.1.6"
+      run: pip install poetry=="1.1.11"
     
     - name: Config poetry
       run: poetry config virtualenvs.in-project true    
