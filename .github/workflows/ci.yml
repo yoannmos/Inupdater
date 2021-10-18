@@ -33,12 +33,11 @@ jobs:
         poetry run isort . --check
     - name: Test & Coverage
       run: |
-        poetry run coverage run -m pytest
-        poetry run coverage xml
+        poetry run pytest --cov-report term  --cov-report xml:coverage.xml --cov=inupdater
     - name: "Upload coverage to Codecov"
       uses: codecov/codecov-action@v1
       with:
-        fail_ci_if_error: true
+        fail_ci_if_error: truepytest --cov-
       
     - name: Docs
       run: |
