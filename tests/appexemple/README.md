@@ -1,0 +1,1 @@
+This purpose of this folder is testing real case of the app

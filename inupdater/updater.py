@@ -8,6 +8,10 @@ from typing import Union
 from packaging.version import InvalidVersion, Version
 
 from inupdater.config import SettingsManager
+<<<<<<< HEAD
+=======
+from inupdater.ui import UserInterface
+>>>>>>> ui
 
 
 @dataclass
@@ -17,18 +21,53 @@ class Exefile:
 
 
 class ExeUpdater:
+<<<<<<< HEAD
     def __init__(self, install_path: Path) -> None:
         self.install_path = install_path
         settings_path = install_path / Path("settings.json")
+=======
+    def __init__(self, install_path: Path, ui: UserInterface) -> None:
+        self.install_path = install_path
+        self.ui = ui
+        settings_path = install_path / Path("settings.json")
+
+        # --------------------------------------
+        # Test Purpose only
+        # --------------------------------------
+        appexemple_path = Path(".").parent / Path("tests/appexemple")
+        test_settings = appexemple_path / Path("settings.json")
+
+        if not settings_path.exists() and test_settings.exists():
+            self.install_path = appexemple_path
+            settings_path = test_settings
+            print(settings_path)
+        # --------------------------------------
+
+>>>>>>> ui
         settingsmanager = SettingsManager(settings_path)
         with settingsmanager as self.settings:
             self.local = None
             self.update = None
+<<<<<<< HEAD
 
             if self.update.exe_version > self.local.exe_version:
                 print(f"find new version : {self.update.exe_version}")
                 copyfile(self.update.exe_path, self.local.exe_path)
                 self.settings.version = self.update.exe_version
+=======
+            self.ui.show_message("Checking for updates...")
+            self.ui.set_state(2)
+
+            if self.update.exe_version > self.local.exe_version:
+                self.ui.show_message(
+                    f"We find a new update ! : {self.update.exe_version}"
+                )
+                self.ui.set_state(4)
+                copyfile(self.update.exe_path, self.local.exe_path)
+                self.settings.version = self.update.exe_version
+                self.ui.show_message("Update installed !")
+                self.ui.set_state(6)
+>>>>>>> ui
 
     @property
     def local(self) -> Exefile:
@@ -81,6 +120,16 @@ class ExeUpdater:
 
     def launch(self, *args):
         command = [str(self.local.exe_path), *args]
+<<<<<<< HEAD
         print(f"Launching {command}")
         # subprocess.call(command)
+=======
+        self.ui.show_message(f"Launching {self.settings.exe_name}")
+        self.ui.set_state(8)
+
+        self.ui.show_message("Please wait..")
+        self.ui.set_state(10)
+
+        self.ui.close()
+>>>>>>> ui
         os.system(" ".join([str(c) for c in command]))
