@@ -33,7 +33,7 @@ You need a settings.json with the following content in the same folder.
 ```txt
 {
     "exe_name": "appexemple", // exe name without version
-    "dist_location": "dist/", // location folder of yours dist (a dist should look like : appexemple_1.0.2 = *exe_name*_*version*)
+    "dist_path": "dist/", // location folder of yours dist (a dist should look like : appexemple_1.0.2 = *exe_name*_*version*)
     "version": "0.0.1" // Version auto updated, (You can keep 0.0.1 to force update in first launch)
 }
 ```
