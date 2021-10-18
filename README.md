@@ -3,11 +3,8 @@
 ------------------------------------------------------------------------
 
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://pypi.org/project/isort/)
-<<<<<<< HEAD
 [![test](https://github.com/yoannmos/Inupdater/actions/workflows/ci.yml/badge.svg)](https://github.com/yoannmos/Inupdater)
 [![codecov](https://codecov.io/gh/yoannmos/Inupdater/branch/master/graph/badge.svg?token=CV7RJU2RWM)](https://codecov.io/gh/yoannmos/Inupdater)
-=======
->>>>>>> ui
 
 ------------------------------------------------------------------------
 
