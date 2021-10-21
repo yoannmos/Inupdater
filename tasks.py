@@ -14,7 +14,7 @@ def clean(c):
     rmtree(".pytest_cache", ignore_errors=True)
     rmtree("htmlcov", ignore_errors=True)
     rmtree("site", ignore_errors=True)
-    rmtree("inupdater/__pycache__", ignore_errors=True)
+    rmtree("src/inupdater/__pycache__", ignore_errors=True)
     try:
         os.remove(".coverage")
     except:
@@ -64,6 +64,6 @@ def docs(c):
 def build(c):
 
     c.run(
-        "pyinstaller --clean --onefile --name launcher --paths .venv/Lib/site-packages --paths .venv/Scripts inupdater/__main__.py"
+        "pyinstaller --clean --onefile --name launcher --paths .venv/Lib/site-packages --paths .venv/Scripts src/inupdater/__main__.py"
     )
     print("Build SUCCESSFUL !")

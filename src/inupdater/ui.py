@@ -48,7 +48,7 @@ class QtUI(UserInterface):
     def __init__(self) -> None:
         super().__init__()
         app = QApplication(sys.argv)
-        qpix = QPixmap("inupdater\data\splash.png")
+        qpix = QPixmap("src\inupdater\data\splash.png")
         self.splash = SplashScreen(qpix)
         self.splash.set_progress_max(10)
         self.splash.show()
