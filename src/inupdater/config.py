@@ -1,9 +1,64 @@
 import json
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Union
+from typing import Any
 
 from packaging.version import InvalidVersion, Version
-from pydantic import BaseSettings, validator
+
+
+@dataclass
+class Settings:
+    exe_name: str
+    dist_location: Path # Actually support only path
+    version: Version
+
+    @property
+    def exe_name(self):
+        return self._exe_name
+
+    @exe_name.setter
+    def exe_name(self, value):
+        match value:
+            case str() if value.isalpha():
+                self._exe_name = value
+            case _:
+                raise TypeError("Exe name should be alphanumeric")
+
+    @property
+    def dist_location(self):
+        """Can be return a method ?"""
+        return self._dist_location
+
+    @dist_location.setter
+    def dist_location(self, value):
+        match value:
+            case Path() | str() if Path(value).exists() and Path(value).is_dir():
+                self._dist_location = Path(value)
+
+            case _:
+                raise TypeError(
+                    "Your dist_location is not a valid, actually only Path are supported")
+
+    @property
+    def version(self) -> Version:
+        return self._version
+
+    @version.setter
+    def version(self, value: str | Version):
+        match value:
+            case str():
+                self._version = Version(value)
+            case Version():
+                self._version = value
+            case None:
+                self._version = Version("0.0.1")
+            case _:
+                raise InvalidVersion
+
+    def asdict(self):
+        return {"exe_name": str(self._exe_name),
+                "dist_location": str(self.dist_location),
+                "version": str(self.version)}
 
 
 class SettingsEncoder(json.JSONEncoder):
@@ -12,52 +67,6 @@ class SettingsEncoder(json.JSONEncoder):
             return str(o)
         else:
             return super().default(o)
-
-
-class Settings(BaseSettings):
-
-    exe_name: str
-    dist_path: Path
-    version: Union[str, Version]
-
-    @validator("exe_name")
-    def name_only(cls, v: str):
-        if v.isalpha:
-            return v
-        elif len(v.split("_")) > 1:
-            try:
-                Version(v.split("_")[1])
-                return v.split("_")[0]
-            except InvalidVersion:
-                pass
-        else:
-            raise TypeError(
-                "Exe name should be alphanumeric or contain valid version after '_'"
-            )
-
-    @validator("dist_path")
-    def path_exists(cls, v):
-        if not v.exists():
-            raise FileExistsError("Path is not valid")
-        return v
-
-    @validator("version", always=True)
-    def check_exist_version(cls, v):
-        if isinstance(v, str):
-            return Version(v)
-
-        if isinstance(v, Version):
-            return v
-
-        if not v:
-            return Version("0.0.1")
-
-        else:
-            raise InvalidVersion
-
-    class Config:
-        validate_assignment = True
-
 
 class SettingsManager:
 
@@ -73,4 +82,4 @@ class SettingsManager:
 
     def __exit__(self, *exc) -> None:
         with open(self.settings_path, "w") as f:
-            json.dump(self.settings.dict(), f, cls=SettingsEncoder, indent="\t")
+            json.dump(self.settings.asdict(), f, cls=SettingsEncoder, indent="\t")

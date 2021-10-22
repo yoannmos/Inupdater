@@ -1,5 +1,5 @@
 {
 	"exe_name": "appexemple",
-	"dist_path": "tests\\appexemple\\dist_test",
-	"version": "0.1.0"
+	"dist_location": "tests\\appexemple\\dist_test",
+	"version": "0.0.1"
 }
