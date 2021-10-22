@@ -32,26 +32,10 @@ def clean(c):
 
 
 @task()
-def test(c, cov=None):
-    rmtree(".pytest_cache", ignore_errors=True)
-    try:
-        os.remove(".coverage")
-    except FileNotFoundError:
-        pass
-    c.run("poetry run coverage run -m pytest")
-    if cov:
-        try:
-            os.remove("coverage.xml")
-        except:
-            pass
-        rmtree("htmlcov", ignore_errors=True)
-
-        c.run("poetry run coverage html")
-        site = "file://" + str(Path("htmlcov/index.html").absolute())
-        webbrowser.open(site)
-
-    else:
-        c.run("poetry run coverage run -m pytest")
+def test(c):
+    c.run(
+        "poetry run pytest --cov-report term --cov-report xml --cov=inupdater tests/ -vv"
+    )
 
 
 @task()
