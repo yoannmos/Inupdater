@@ -11,10 +11,25 @@ from inupdater.config import SettingsManager
 from inupdater.ui import UserInterface
 
 
-@dataclass
+@dataclass(eq=False, order=False)
 class Exefile:
-    exe_path: Path
-    exe_version: Union[str, Version]
+    path: Path
+    version: Version
+
+    def __eq__(self, o: object) -> bool:
+        return self.version == o.version
+
+    def __lt__(self, o: object) -> bool:
+        return self.version < o.version
+
+    def __le__(self, o: object) -> bool:
+        return self.version <= o.version
+
+    def __gt__(self, o: object) -> bool:
+        return self.version > o.version
+
+    def __ge__(self, o: object) -> bool:
+        return self.version >= o.version
 
 
 class ExeUpdater:
@@ -41,13 +56,11 @@ class ExeUpdater:
             self.ui.show_message("Checking for updates...")
             self.ui.set_state(2)
 
-            if self.update.exe_version > self.local.exe_version:
-                self.ui.show_message(
-                    f"We find a new update ! : {self.update.exe_version}"
-                )
+            if self.update > self.local:
+                self.ui.show_message(f"We find a new update ! : {self.update.version}")
                 self.ui.set_state(4)
-                copyfile(self.update.exe_path, self.local.exe_path)
-                self.settings.version = self.update.exe_version
+                copyfile(self.update.path, self.local.path)
+                self.settings.version = self.update.version
                 self.ui.show_message("Update installed !")
                 self.ui.set_state(6)
 
@@ -55,7 +68,7 @@ class ExeUpdater:
     def local(self) -> Exefile:
 
         exe_path = self.install_path / Path(
-            f"{self.settings.exe_name}.exe"
+            f"{self.settings._exe_name}.exe"
         )  # TODO EXE or not?!? check with no Admin
         assert exe_path.exists()
         exe_version = self.settings.version
@@ -67,13 +80,13 @@ class ExeUpdater:
         return
 
     @property
-    def update(self):
-        exe_path = self.check_for_latest_update(self.settings.dist_path)
+    def update(self) -> Exefile:
+        exe_path = self.check_for_latest_update(self.settings.dist_location)
         exe_version = self.get_version(exe_path)
         return Exefile(exe_path, exe_version)
 
     @update.setter
-    def update(self, _):
+    def update(self, _) -> None:
         return
 
     @staticmethod
@@ -101,8 +114,8 @@ class ExeUpdater:
         return last
 
     def launch(self, *args):
-        command = [str(self.local.exe_path), *args]
-        self.ui.show_message(f"Launching {self.settings.exe_name}")
+        command = [str(self.local.path), *args]
+        self.ui.show_message(f"Launching {self.settings._exe_name}")
         self.ui.set_state(8)
 
         self.ui.show_message("Please wait..")
