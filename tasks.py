@@ -44,10 +44,10 @@ def docs(c):
     c.run("poetry run mkdocs serve")
 
 
-@task(pre=[clean, test])
+@task()  # pre=[clean, test])
 def build(c):
-
+    # TODO : try to get github ci
     c.run(
-        "pyinstaller --clean --onefile --name launcher --paths .venv/Lib/site-packages --paths .venv/Scripts src/inupdater/__main__.py"
+        "poetry run pyinstaller --clean --onefile --noconsole --name launcher --paths .venv/Lib/site-packages --exclude-module _bootlocale --add-data src/inupdater/data/splash.png;inupdater/data/splash.png --paths .venv/Scripts src/inupdater/__main__.py"
     )
     print("Build SUCCESSFUL !")
