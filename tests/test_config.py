@@ -1,18 +1,19 @@
 """Config Test File"""
+import json
 from pathlib import Path
 
 import pytest
 from packaging.version import InvalidVersion, Version
 
-from inupdater.config import Settings
+from inupdater.config import Settings, SettingsEncoder
 
 
 @pytest.fixture
 def standard_setting_dict():
     settings_dict = {
         "exe_name": "appexemple",
-        "dist_location": "tests\\appexemple\\dist_test",
-        "version": "0.0.1",
+        "dist_location": Path("tests/appexemple/dist_test"),
+        "version": Version("0.0.1"),
     }
     return settings_dict
 
@@ -35,6 +36,11 @@ class TestSettings:
     def test_dist_location_path(self, standard_setting_dict):
         settings = Settings(**standard_setting_dict)
         assert Path(standard_setting_dict["dist_location"]) == settings.dist_location
+
+    def test_dist_location_path_str(self, standard_setting_dict):
+        standard_setting_dict["dist_location"] = "tests/appexemple/dist_test"
+        setting = Settings(**standard_setting_dict)
+        assert Path("tests/appexemple/dist_test") == setting.dist_location
 
     def test_dist_location_pathdontexist(self, standard_setting_dict):
         with pytest.raises(TypeError):
@@ -80,3 +86,29 @@ class TestSettings:
     def test_asdict(self, standard_setting_dict):
         setting = Settings(**standard_setting_dict)
         assert standard_setting_dict == setting.asdict()
+
+
+class TestSettingsEncoder:
+    def test_encode(self):
+        settings_dict = {
+            "exe_name": "appexemple",
+            "dist_location": "tests/appexemple/dist_test",
+            "version": "0.0.1",
+        }
+        setting = Settings(**settings_dict)
+        setting_json = json.dumps(setting.asdict(), cls=SettingsEncoder)
+        # eval needed for solving "" and '' issue
+        assert eval(str(settings_dict)) == eval(setting_json)
+
+    def test_encode_not_handled_type(self):
+        """try to show normal behaviour of json.JSONEncoder"""
+        unknow_dict = {"rdm_list": [0, 1, 2, 3], "rdm_set": (0, 1, 2, 3)}
+
+        custom_setting_json = json.dumps(unknow_dict, cls=SettingsEncoder)
+        normal_setting_json = json.dumps(unknow_dict, cls=SettingsEncoder)
+        assert custom_setting_json == normal_setting_json
+
+
+class TestSettingsManager:
+    def test_pass(self):
+        assert True

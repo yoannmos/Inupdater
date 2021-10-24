@@ -56,17 +56,22 @@ class Settings:
                 raise InvalidVersion
 
     def asdict(self):
-        return {"exe_name": str(self._exe_name),
-                "dist_location": str(self.dist_location),
-                "version": str(self.version)}
+        return {"exe_name": self._exe_name,
+                "dist_location": self.dist_location,
+                "version": self.version}
 
 
 class SettingsEncoder(json.JSONEncoder):
-    def default(self, o: Any) -> Any:
-        if any([isinstance(o, str), isinstance(o, Path), isinstance(o, Version)]):
-            return str(o)
+    def default(self, object: Any) -> Any:
+        if any([isinstance(object, str), isinstance(object, Version)]):
+            return str(object)
+        if isinstance(object, Path):
+            new = str(object)
+            new = new.replace("\\", "/")
+            new = new.replace("\\\\", "/")
+            return new
         else:
-            return super().default(o)
+            return super().default(object)
 
 class SettingsManager:
 
