@@ -53,7 +53,7 @@ jobs:
       uses: mskri/check-uncommitted-changes-action@v1.0.1
     - name: Evaluate if there are changes
       if: steps.check-changes.outputs.outcome == failure()
-        run: echo "Please rebuild ressource  with 'pyside6-rcc resource.qrc -o src/inupdater/resource.py'"
+      run: echo "Please rebuild ressource  with 'pyside6-rcc resource.qrc -o src/inupdater/resource.py'"
 
     - name: Build Exe
       run: poetry run pyinstaller --clean --onefile --noconsole --name launcher --paths .venv/Lib/site-packages --exclude-module _bootlocale --paths .venv/Scripts src/inupdater/__main__.py
