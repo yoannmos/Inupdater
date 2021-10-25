@@ -19,10 +19,18 @@ class SplashScreen(QSplashScreen):
         self.__init_ui__()
 
     def __init_ui__(self):
+
         self._progressBar = QProgressBar()
         self._progressBar.setMinimumWidth(250)
         self._progressBar.setTextVisible(False)
-        self._progressBar.setStyleSheet(
+
+        self._messageLabel = QLabel()
+        f = QFont()
+        f.setPointSize(16)
+        self._messageLabel.setFont(f)
+
+        # Style sheet
+        self.setStyleSheet(
             """
             QProgressBar{
                 border: 2px solid grey;
@@ -35,22 +43,12 @@ class SplashScreen(QSplashScreen):
                 border-radius: 8px;
                 margin: 0px;
                 }
-            """
-        )
 
-        self._messageLabel = QLabel()
-        self._messageLabel.setStyleSheet(
-            """
             QLabel{
-            color: white
-            }
+                color: white
+                }
             """
         )
-
-        # Text Font
-        f = QFont()
-        f.setPointSize(16)
-        self._messageLabel.setFont(f)
 
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
