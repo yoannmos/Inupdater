@@ -100,14 +100,6 @@ class TestSettingsEncoder:
         # eval needed for solving "" and '' issue
         assert eval(str(settings_dict)) == eval(setting_json)
 
-    def test_encode_not_handled_type(self):
-        """try to show normal behaviour of json.JSONEncoder"""
-        unknow_dict = {"rdm_list": [0, 1, 2, 3], "rdm_set": (0, 1, 2, 3)}
-
-        custom_setting_json = json.dumps(unknow_dict, cls=SettingsEncoder)
-        normal_setting_json = json.dumps(unknow_dict, cls=SettingsEncoder)
-        assert custom_setting_json == normal_setting_json
-
 
 class TestSettingsManager:
     def test_pass(self):

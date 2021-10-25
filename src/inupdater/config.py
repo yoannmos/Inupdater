@@ -70,7 +70,7 @@ class SettingsEncoder(json.JSONEncoder):
             new = new.replace("\\", "/")
             new = new.replace("\\\\", "/")
             return new
-        else:
+        else: # pragma: no cover
             return super().default(object)
 
 class SettingsManager:
