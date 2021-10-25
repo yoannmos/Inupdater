@@ -20,25 +20,25 @@ You can provide a new version of your exe in a location of your choice and user 
 
 <!-- Check the [appexemple](https://github.com/yoannmos/Inupdater-Appexemple) repository for recomended implementation. -->
 
-## Use
+## How to Use
 
-Download *launcher.exe* and add it to your dist folder.
+Download the last stable version of *launcher.exe* and add it to your dist folder.
 
 To work, the launcher.exe should be installed in the same repo of your .exe
 
-![Typical install Folder](docs\images\folder.PNG)
+![Typical install Folder](https://github.com/yoannmos/Inupdater/blob/master/docs/images/folder.PNG?raw=true)
 
 You need a settings.json with the following content in the same folder.
 
 ```txt
 {
     "exe_name": "appexemple", // exe name without version
-    "dist_path": "dist/", // location folder of yours dist (a dist should look like : appexemple_1.0.2 = *exe_name*_*version*)
+    "dist_location": "dist/", // location folder of yours dist (a version should look like : appexemple_1.0.2 = *exe_name*_*version*)
     "version": "0.0.1" // Version auto updated, (You can keep 0.0.1 to force update in first launch)
 }
 ```
 
-Only version will be updated exe_name and dist location will not be updated.
+Only version will be updated exe_name and dist location will not be updated. It still can be updated externally by modifying the json.
 
 ### Innosetup
 
@@ -66,6 +66,19 @@ Root: HKCR; Subkey: "Directory\Background\shell\{#AppName}"; ValueType: string; 
 Root: HKCR; Subkey: "Directory\Background\shell\{#AppName}\command"; ValueType: string; ValueName: ""; ValueData: "{app}\launcher.exe"; Flags: uninsdeletekey
 ```
 
-## Test on an exemple
+## How to test Inupdater
 
 You can check the exemple repo ([Inupdater-AppExemple](https://github.com/yoannmos/Inupdater-AppExemple)) for a simple implementation of Inupdater.
+Or clone this repo and execute `inupdater/__main__.py` a version of Inupdater-AppExemple is included for testing purpose.
+
+## How to contribute
+
+- Fork 
+- Clone the project with `git clone https://github.com/*yourname*/Inupdater.git _Inupdater`
+- Install with poetry `poetry install`
+- Run test with `invoke test`
+- Run main to ensure state of master branch
+- Add your modification and test accordingly
+- Test your modification with running main 
+- Build locally to test your changed with `invoke build`
+- Make a pull request on github
