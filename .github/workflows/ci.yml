@@ -48,12 +48,13 @@ jobs:
     - name: Re-Build Resource
       run: poetry run pyside6-rcc resource.qrc -o src/inupdater/resource.py
 
-    - name: Check for uncommitted changes
-      id: check-changes
-      uses: mskri/check-uncommitted-changes-action@v1.0.1
-    - name: Evaluate if there are changes
-      if: steps.check-changes.outputs.outcome == failure()
-      run: echo "Please rebuild ressource  with 'pyside6-rcc resource.qrc -o src/inupdater/resource.py'"
+    # TODO : Find an equivalent on windows
+    # - name: Check for uncommitted changes
+    #   id: check-changes
+    #   uses: mskri/check-uncommitted-changes-action@v1.0.1
+    # - name: Evaluate if there are changes
+    #   if: steps.check-changes.outputs.outcome == failure()
+    #   run: echo "Please rebuild ressource  with 'pyside6-rcc resource.qrc -o src/inupdater/resource.py'"
 
     - name: Build Exe
       run: poetry run pyinstaller --clean --onefile --noconsole --name launcher --paths .venv/Lib/site-packages --exclude-module _bootlocale --paths .venv/Scripts src/inupdater/__main__.py
